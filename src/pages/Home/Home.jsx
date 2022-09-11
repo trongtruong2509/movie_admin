@@ -66,7 +66,7 @@ const Home = () => {
                <p className="col-span-4 text-secondary">Description</p>
                <p className="col-span-2 text-secondary">Actions</p>
             </div>
-            {filmSlice.pending ? (
+            {filmSlice?.pending ? (
                <div className="w-full h-96 flex items-center justify-center">
                   <SyncLoader
                      color="#4340DA"
@@ -77,7 +77,7 @@ const Home = () => {
                </div>
             ) : (
                <>
-                  {filmSlice.value.map((film) => (
+                  {filmSlice?.entities.map((film) => (
                      <FilmItem key={film.maPhim} info={film} />
                   ))}
                </>

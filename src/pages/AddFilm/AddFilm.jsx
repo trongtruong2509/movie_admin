@@ -1,18 +1,21 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useFormik } from "formik";
 
 import { MdCloudUpload } from "react-icons/md";
 import DatePicker from "react-datepicker";
+import moment from "moment";
 import Switch from "react-switch";
-import * as httpRequest from "../../common/utils/httpRequest";
+
 import { paths } from "../../app/routes";
+import { useDispatch } from "react-redux";
+import { addNewFilm } from "../../common/slices/filmSlice";
 
 import "react-datepicker/dist/react-datepicker.css";
-import { useFormik } from "formik";
-import moment from "moment";
 
 const AddFilm = () => {
    const navigate = useNavigate();
+   const dispatch = useDispatch();
 
    const [poster, setPoster] = useState(null);
    const [startDate, setStartDate] = useState(new Date());
@@ -37,6 +40,19 @@ const AddFilm = () => {
       },
       onSubmit: (values) => {
          console.log("[submit]", values);
+
+         let formData = new FormData();
+
+         for (const key in values) {
+            if (key === "hinhAnh") {
+               formData.append("File", values.hinhAnh, values.hinhAnh.name);
+            } else {
+               formData.append(key, values[key]);
+            }
+         }
+
+         console.log("[formData]", formData);
+         dispatch(addNewFilm(formData));
       },
    });
 
@@ -58,11 +74,9 @@ const AddFilm = () => {
       reader.readAsDataURL(src);
       reader.onload = (e) => {
          setPoster(e.target.result);
-         formik.setFieldValue("hinhAnh", e.target.result);
+         formik.setFieldValue("hinhAnh", src);
       };
    };
-
-   const onAddNew = () => {};
 
    const onCancel = () => {
       navigate(paths.home);
@@ -80,7 +94,7 @@ const AddFilm = () => {
                   {poster ? (
                      <img src={poster} className="w-full object-contain" />
                   ) : (
-                     <label className="w-full h-80 flex items-center justify-center flex-col gap-2 text-secondary text-lg opacity-50 cursor-pointer bg-hover-1">
+                     <label className="w-full h-80 flex items-center rounded-lg justify-center flex-col gap-2 text-secondary text-lg opacity-50 cursor-pointer bg-hover-1">
                         <p className="">Click here to upload film poster</p>
                         <MdCloudUpload className="w-8 h-8" />
                         <input

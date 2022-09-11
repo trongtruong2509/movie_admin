@@ -1,17 +1,21 @@
 import React from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import { FiEdit } from "react-icons/fi";
 import { AiOutlineDelete } from "react-icons/ai";
 
+import { updateSelected } from "../../common/slices/filmSlice";
 import { paths } from "../../app/routes";
 
 const FilmItem = ({ info }) => {
    const navigate = useNavigate();
+   const dispatch = useDispatch();
 
    const onEdit = () => {
       const completePath = paths.filmDetail.replace(":id", info?.biDanh);
       navigate(completePath);
+      dispatch(updateSelected(info));
    };
 
    return (
@@ -26,14 +30,14 @@ const FilmItem = ({ info }) => {
          >
             {info?.tenPhim}
          </div>
-         <div className="col-span-2 w-16 h-16">
+         <div className="col-span-2 w-16 h-20">
             <img
                src={info?.hinhAnh}
                alt=""
-               className="w-full h-full object-cover rounded-md"
+               className="w-full h-full object-contain rounded-md"
             />
          </div>
-         <p className="col-span-4 line-clamp overflow-hidden pr-6">
+         <p className="col-span-4 line-clamp overflow-hidden pr-6 py-1">
             {info?.moTa}
          </p>
          <div className="col-span-2 text-white flex gap-3">
