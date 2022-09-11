@@ -48,4 +48,19 @@ export const put = async (path, data, options = {}) => {
    return response.data;
 };
 
+export const Delete = async (path, payload, options = {}) => {
+   console.log("[options]", options);
+   const response = await httpRequest.delete(path, {
+      headers: {
+         ...defaultHeader,
+         Authorization: "Bearer " + localStorage.getItem("accessToken"),
+      },
+      params: {
+         ...payload,
+      },
+      ...options,
+   });
+   return response.data;
+};
+
 export default httpRequest;

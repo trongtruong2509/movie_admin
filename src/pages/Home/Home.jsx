@@ -8,7 +8,7 @@ import SyncLoader from "react-spinners/SyncLoader";
 import FilmItem from "./FilmItem";
 import { paths } from "../../app/routes";
 
-import { fetchFilms } from "../../common/slices/filmSlice";
+import { fetchFilms, updateSuccessDelete } from "../../common/slices/filmSlice";
 
 const Home = () => {
    const navigate = useNavigate();
@@ -18,7 +18,13 @@ const Home = () => {
 
    useEffect(() => {
       dispatch(fetchFilms());
-   }, []);
+
+      if (filmSlice?.successDelete) {
+         dispatch(updateSuccessDelete(false));
+      }
+   }, [filmSlice?.successDelete]);
+
+   // useEffect(() => {}, [filmSlice?.successDelete]);
 
    const onAddNew = () => {
       navigate(paths.addFilm);

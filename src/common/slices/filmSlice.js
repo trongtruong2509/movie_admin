@@ -7,6 +7,7 @@ const initialState = {
    selected: null,
    pending: false,
    success: false,
+   successDelete: false,
    allow: false, // allow to navigate
 };
 
@@ -53,6 +54,16 @@ export const updateFilm = createAsyncThunk(
    }
 );
 
+export const deleteFilmById = createAsyncThunk(
+   "films/deleteFilmByIdStatus",
+   async (id) => {
+      const response = await httpRequest.Delete("/QuanLyPhim/XoaPhim", {
+         MaPhim: id,
+      });
+      return response.content;
+   }
+);
+
 export const filmSlice = createSlice({
    name: "film",
    initialState,
@@ -63,17 +74,17 @@ export const filmSlice = createSlice({
       updateAllow: (state, action) => {
          state.success = action.payload;
       },
+      updateSuccessDelete: (state, action) => {
+         state.successDelete = action.payload;
+      },
    },
    extraReducers: (builder) => {
-      // Add reducers for additional action types here, and handle loading state as needed
       builder
          .addCase(fetchFilms.pending, (state, action) => {
-            // Add user to the state array
             console.log("[fetchFlim]", "loading");
             state.pending = true;
          })
          .addCase(fetchFilms.fulfilled, (state, action) => {
-            // Add user to the state array
             console.log("[fetchFlim] success", action.payload);
 
             state.entities = action.payload;
@@ -81,7 +92,6 @@ export const filmSlice = createSlice({
             state.pending = false;
          })
          .addCase(fetchFilms.rejected, (state, action) => {
-            // Add user to the state array
             console.log("[fetchFlim] rejected");
 
             state.entities = [];
@@ -89,26 +99,20 @@ export const filmSlice = createSlice({
             state.pending = false;
          })
          .addCase(addNewFilm.pending, (state) => {
-            // Add user to the state array
             console.log("[addNewFilm]", "loading");
             state.pending = true;
          })
          .addCase(addNewFilm.fulfilled, (state, action) => {
-            // Add user to the state array
             console.log("[addNewFilm] fulfilled", action.payload);
-
-            // state.selected = action.payload;
             state.allow = true;
             state.success = false;
             state.pending = false;
          })
          .addCase(updateFilm.pending, (state) => {
-            // Add user to the state array
             console.log("[updateFilm]", "loading");
             state.pending = true;
          })
          .addCase(updateFilm.fulfilled, (state, action) => {
-            // Add user to the state array
             console.log("[updateFilm] fulfilled", action.payload);
 
             state.selected = action.payload;
@@ -117,23 +121,36 @@ export const filmSlice = createSlice({
             state.pending = false;
          })
          .addCase(getFilmById.pending, (state) => {
-            // Add user to the state array
             console.log("[getFilmById]", "loading");
             state.pending = true;
          })
          .addCase(getFilmById.fulfilled, (state, action) => {
-            // Add user to the state array
             console.log("[getFilmById] fulfilled", action.payload);
-
-            // state.selected = action.payload;
             state.selected = action.payload;
             state.success = false;
+            state.pending = false;
+         })
+         .addCase(deleteFilmById.pending, (state) => {
+            console.log("[deleteFilmById]", "loading");
+            state.pending = true;
+         })
+         .addCase(deleteFilmById.fulfilled, (state, action) => {
+            console.log("[deleteFilmById] fulfilled", action.payload);
+
+            state.successDelete = true;
+            state.pending = false;
+         })
+         .addCase(deleteFilmById.rejected, (state, action) => {
+            console.log("[deleteFilmById] rejected", action.payload);
+
+            state.successDelete = false;
             state.pending = false;
          });
    },
 });
 
 // Action creators are generated for each case reducer function
-export const { updateSelected, updateAllow } = filmSlice.actions;
+export const { updateSelected, updateAllow, updateSuccessDelete } =
+   filmSlice.actions;
 
 export default filmSlice.reducer;
