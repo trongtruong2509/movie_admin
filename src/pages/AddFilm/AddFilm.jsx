@@ -8,17 +8,20 @@ import moment from "moment";
 import Switch from "react-switch";
 
 import { paths } from "../../app/routes";
-import { useDispatch } from "react-redux";
-import { addNewFilm } from "../../common/slices/filmSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { addNewFilm, updateAllow } from "../../common/slices/filmSlice";
 
 import "react-datepicker/dist/react-datepicker.css";
+import { GROUP_ID } from "../../common/utils/config";
 
 const AddFilm = () => {
    const navigate = useNavigate();
    const dispatch = useDispatch();
 
+   const film = useSelector((state) => state.film);
+
    const [poster, setPoster] = useState(null);
-   const [startDate, setStartDate] = useState(new Date());
+   const [releaseDate, setReleaseDate] = useState(Date.now());
    const [nowShowing, setNowShowing] = useState(false);
    const [coming, setComing] = useState(false);
    const [isHot, setIsHot] = useState(false);
@@ -30,8 +33,8 @@ const AddFilm = () => {
          tenPhim: "",
          trailer: "",
          moTa: "",
-         maNhom: "",
-         ngayKhoiChieu: moment(Date.now()).format("DD/MM/YYYY"),
+         maNhom: GROUP_ID,
+         ngayKhoiChieu: moment(releaseDate).format("DD/MM/YYYY"),
          sapChieu: false,
          dangChieu: false,
          hot: false,
@@ -51,10 +54,11 @@ const AddFilm = () => {
             }
          }
 
-         console.log("[formData]", formData);
          dispatch(addNewFilm(formData));
       },
    });
+
+   useEffect(() => {}, []);
 
    useEffect(() => {
       formik.setFieldValue("dangChieu", nowShowing);
@@ -63,8 +67,18 @@ const AddFilm = () => {
       formik.setFieldValue("danhGia", score);
    }, [nowShowing, coming, isHot, score]);
 
+   useEffect(() => {
+      if (film?.allow) {
+         navigate(paths.home);
+         dispatch(updateAllow(false));
+      }
+   }, [film]);
+
    const handleDateChange = (date) => {
-      console.log("[date]", moment(date).format("DD/MM/YYYY"));
+      setReleaseDate(date);
+      const selectedDate = moment(date).format("DD/MM/YYYY");
+      console.log("[date]", selectedDate);
+      formik.setFieldValue("ngayKhoiChieu", selectedDate);
    };
 
    const handleLoadFile = async (src) => {
@@ -99,7 +113,7 @@ const AddFilm = () => {
                         <MdCloudUpload className="w-8 h-8" />
                         <input
                            type="file"
-                           accept="image/png, image/gif, image/jpg"
+                           accept="image/*"
                            className="w-0 h-0"
                            onChange={(e) => handleLoadFile(e.target.files[0])}
                         />
@@ -146,17 +160,17 @@ const AddFilm = () => {
                   <label className="w-24">Group</label>
                   <input
                      type="text"
-                     name="danhGia"
+                     name="maNhom"
                      onChange={formik.handleChange}
                      className="pl-4 py-2 border border-gray-400 rounded-lg w-32 focus-within:border-primary outline-none"
                      placeholder="Group"
-                     defaultValue="GP01"
+                     defaultValue={GROUP_ID}
                   />
                </div>
                <div className="flex items-center">
                   <label className="w-40">Release Date</label>
                   <DatePicker
-                     selected={startDate}
+                     selected={releaseDate}
                      dateFormat="dd/MM/yyyy"
                      onChange={(date) => handleDateChange(date)}
                      className="px-4 py-2 border border-gray-400 rounded-lg w-40 focus-within:border-primary outline-none"

@@ -7,6 +7,7 @@ const initialState = {
    selected: null,
    pending: false,
    success: false,
+   allow: false, // allow to navigate
 };
 
 export const fetchFilms = createAsyncThunk("films/fetchAllFilms", async () => {
@@ -17,14 +18,38 @@ export const fetchFilms = createAsyncThunk("films/fetchAllFilms", async () => {
    return response.content;
 });
 
+export const getFilmById = createAsyncThunk(
+   "films/getFilmByIdStatus",
+   async (id) => {
+      const response = await httpRequest.get("/QuanLyPhim/LayThongTinPhim", {
+         maPhim: id,
+      });
+
+      console.log("[getFilmById]", response.content);
+
+      return response.content;
+   }
+);
+
 export const addNewFilm = createAsyncThunk(
    "films/addNewFilmStatus",
+   async (formData) => {
+      const response = await httpRequest.post(
+         "/QuanLyPhim/ThemPhimUploadHinh",
+         formData
+      );
+      return response.data;
+   }
+);
+
+export const updateFilm = createAsyncThunk(
+   "films/updateFilmStatus",
    async (formData) => {
       const response = await httpRequest.post(
          "/QuanLyPhim/CapNhatPhimUpload",
          formData
       );
-      return response.data;
+      return response.content;
    }
 );
 
@@ -34,6 +59,9 @@ export const filmSlice = createSlice({
    reducers: {
       updateSelected: (state, action) => {
          state.selected = action.payload;
+      },
+      updateAllow: (state, action) => {
+         state.success = action.payload;
       },
    },
    extraReducers: (builder) => {
@@ -69,7 +97,36 @@ export const filmSlice = createSlice({
             // Add user to the state array
             console.log("[addNewFilm] fulfilled", action.payload);
 
-            // state.list = [];
+            // state.selected = action.payload;
+            state.allow = true;
+            state.success = false;
+            state.pending = false;
+         })
+         .addCase(updateFilm.pending, (state) => {
+            // Add user to the state array
+            console.log("[updateFilm]", "loading");
+            state.pending = true;
+         })
+         .addCase(updateFilm.fulfilled, (state, action) => {
+            // Add user to the state array
+            console.log("[updateFilm] fulfilled", action.payload);
+
+            state.selected = action.payload;
+            state.allow = true;
+            state.success = false;
+            state.pending = false;
+         })
+         .addCase(getFilmById.pending, (state) => {
+            // Add user to the state array
+            console.log("[getFilmById]", "loading");
+            state.pending = true;
+         })
+         .addCase(getFilmById.fulfilled, (state, action) => {
+            // Add user to the state array
+            console.log("[getFilmById] fulfilled", action.payload);
+
+            // state.selected = action.payload;
+            state.selected = action.payload;
             state.success = false;
             state.pending = false;
          });
@@ -77,6 +134,6 @@ export const filmSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { updateSelected } = filmSlice.actions;
+export const { updateSelected, updateAllow } = filmSlice.actions;
 
 export default filmSlice.reducer;

@@ -24,4 +24,40 @@ code {
     -webkit-box-orient: vertical;  
   }
 
+  @layer utilities {
+    .scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 10px;
+    }
+  
+    /* .scrollbar::-webkit-scrollbar-track {
+      border-radius: 100vh;
+      background: #f0f0f0;
+      opacity: 0;
+    } */
+  
+    .scrollbar-dark::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.3);
+    }
+
+    .scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(0,0,0,0.2);
+      border-radius: 100vh;
+      height: 10px;
+      /* border: 3px solid #f6f7ed; */
+      cursor: pointer;
+    }
+  
+    .scrollbar::-webkit-scrollbar-thumb:hover {
+      background: rgba(255,255,255,0.5);
+    }
+  
+    .scrollbar::-webkit-scrollbar-track-piece:start {
+      background: transparent;
+    }
+  
+    .scrollbar::-webkit-scrollbar-track-piece:end {
+      background: transparent;
+    }
+  }
 }

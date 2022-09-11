@@ -13,7 +13,7 @@ const FilmItem = ({ info }) => {
    const dispatch = useDispatch();
 
    const onEdit = () => {
-      const completePath = paths.filmDetail.replace(":id", info?.biDanh);
+      const completePath = paths.filmDetail.replace(":id", info?.maPhim);
       navigate(completePath);
       dispatch(updateSelected(info));
    };
