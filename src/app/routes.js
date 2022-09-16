@@ -11,7 +11,7 @@ export const paths = {
    signup: "/signup",
    addFilm: "/film/addnew",
    filmDetail: "/film/detail/:id",
-   showtime: "/showtime",
+   showtime: "/film/showtime/:id",
    users: "/users",
 };
 

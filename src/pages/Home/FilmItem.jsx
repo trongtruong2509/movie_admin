@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import { FiEdit } from "react-icons/fi";
+import { FiEdit, FiMonitor } from "react-icons/fi";
 import { AiOutlineDelete } from "react-icons/ai";
 
 import DeleteModal from "./DeleteModal";
@@ -20,6 +20,12 @@ const FilmItem = ({ info }) => {
       const completePath = paths.filmDetail.replace(":id", info?.maPhim);
       navigate(completePath);
       dispatch(updateSelected(info));
+   };
+
+   const onShowtime = () => {
+      const completePath = paths.showtime.replace(":id", info?.maPhim);
+      navigate(completePath);
+      // dispatch(updateSelected(info));
    };
 
    const onDelete = () => {
@@ -66,7 +72,14 @@ const FilmItem = ({ info }) => {
                Edit
             </button>
             <button
-               className="rounded-lg h-[36px] px-3 py-1 flex gap-1 items-center justify-center border border-red-500 text-red-600
+               className="bg-primary-dark rounded-lg h-[36px] px-3 py-1 flex gap-1 items-center justify-center opacity-70 hover:opacity-100"
+               onClick={onShowtime}
+            >
+               <FiMonitor />
+               Time
+            </button>
+            <button
+               className="rounded-lg h-[36px] px-2 py-1 flex gap-1 items-center justify-center border border-red-500 text-red-600
             hover:bg-red-600 hover:text-white opacity-70 hover:opacity-100"
                onClick={() => setShow(true)}
             >
