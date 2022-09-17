@@ -2,13 +2,13 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import * as userService from "../../services/userService";
 
-const initialState = {
-   current: null,
-   pending: false,
-   success: false,
-   allow: false,
-   remember: false,
-};
+export const fetchUsers = createAsyncThunk("user/fetchAllUsers", async () => {
+   const response = await userService.getAllUsers();
+
+   console.log("[fetchUsers]", response.content);
+
+   return response.content;
+});
 
 export const userLogin = createAsyncThunk(
    "user/userLoginStatus",
@@ -24,6 +24,34 @@ export const signUp = createAsyncThunk("user/signUpStatus", async (info) => {
    return response.content;
 });
 
+export const updateUserInfo = createAsyncThunk(
+   "user/updateUserInfoStatus",
+   async (info) => {
+      const response = await userService.updateUser(info);
+
+      return response.content;
+   }
+);
+
+export const deleteUserById = createAsyncThunk(
+   "user/deleteUserByIdStatus",
+   async (info) => {
+      const response = await userService.deleteUser(info);
+
+      return response.content;
+   }
+);
+
+const initialState = {
+   entities: [],
+   current: null,
+   pending: false,
+   success: false,
+   allow: false,
+   remember: false,
+   successDelete: false,
+};
+
 export const userSlice = createSlice({
    name: "user",
    initialState,
@@ -37,17 +65,17 @@ export const userSlice = createSlice({
       updateRemember: (state, action) => {
          state.remember = action.payload;
       },
+      updateSuccessDeleteUser: (state, action) => {
+         state.successDelete = action.payload;
+      },
    },
    extraReducers: (builder) => {
-      // Add reducers for additional action types here, and handle loading state as needed
       builder
          .addCase(userLogin.pending, (state) => {
-            // Add user to the state array
             console.log("[userLogin]", "loading");
             state.pending = true;
          })
          .addCase(userLogin.fulfilled, (state, action) => {
-            // Add user to the state array
             console.log("[userLogin] success", action.payload);
             state.current = action.payload;
             state.allow = true;
@@ -63,7 +91,6 @@ export const userSlice = createSlice({
             }
          })
          .addCase(userLogin.rejected, (state, action) => {
-            // Add user to the state array
             console.log("[userLogin] rejected", action.payload);
             state.current = null;
             state.allow = false;
@@ -71,30 +98,74 @@ export const userSlice = createSlice({
             state.pending = false;
          })
          .addCase(signUp.pending, (state) => {
-            // Add user to the state array
             console.log("[signUp]", "loading");
             state.pending = true;
          })
          .addCase(signUp.fulfilled, (state, action) => {
-            // Add user to the state array
             console.log("[signUp] success", action.payload);
-            // state.current = action.payload;
             state.allow = true;
             state.success = true;
             state.pending = false;
          })
          .addCase(signUp.rejected, (state, action) => {
-            // Add user to the state array
             console.log("[signUp] rejected", action.payload);
-            // state.current = null;
             state.allow = false;
             state.success = false;
+            state.pending = false;
+         })
+         .addCase(fetchUsers.pending, (state) => {
+            console.log("[fetchUsers]", "loading");
+            state.pending = true;
+         })
+         .addCase(fetchUsers.fulfilled, (state, action) => {
+            console.log("[fetchUsers] success", action.payload);
+            state.entities = action.payload;
+            state.success = true;
+            state.pending = false;
+         })
+         .addCase(fetchUsers.rejected, (state, action) => {
+            console.log("[fetchUsers] rejected", action.payload);
+            state.entities = [];
+            state.success = false;
+            state.pending = false;
+         })
+         .addCase(deleteUserById.pending, (state) => {
+            console.log("[deleteUserById]", "loading");
+            state.pending = true;
+         })
+         .addCase(deleteUserById.fulfilled, (state, action) => {
+            console.log("[deleteUserById] success");
+            state.successDelete = true;
+            state.pending = false;
+         })
+         .addCase(deleteUserById.rejected, (state, action) => {
+            console.log("[deleteUserById] rejected", action.payload);
+            state.successDelete = false;
+            state.pending = false;
+         })
+         .addCase(updateUserInfo.pending, (state) => {
+            console.log("[updateUserInfo]", "loading");
+            state.pending = true;
+         })
+         .addCase(updateUserInfo.fulfilled, (state, action) => {
+            console.log("[updateUserInfo] success");
+            state.successDelete = true;
+            state.pending = false;
+         })
+         .addCase(updateUserInfo.rejected, (state, action) => {
+            console.log("[updateUserInfo] rejected", action.payload);
+            state.successDelete = false;
             state.pending = false;
          });
    },
 });
 
 // Action creators are generated for each case reducer function
-export const { updateUser, updateAllow, updateRemember } = userSlice.actions;
+export const {
+   updateUser,
+   updateAllow,
+   updateRemember,
+   updateSuccessDeleteUser,
+} = userSlice.actions;
 
 export default userSlice.reducer;

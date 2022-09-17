@@ -1,33 +1,37 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import { BsSearch } from "react-icons/bs";
 import SyncLoader from "react-spinners/SyncLoader";
 
-import FilmItem from "./FilmItem";
+import AddUserModal from "./AddUserModal";
 import { paths } from "../../app/routes";
 
-import { fetchFilms, updateSuccessDelete } from "../../common/slices/filmSlice";
+import {
+   fetchUsers,
+   updateSuccessDeleteUser,
+} from "../../common/slices/userSlice";
+import UserItem from "./UserItem";
 
-const Home = () => {
+const Users = () => {
    const navigate = useNavigate();
    const dispatch = useDispatch();
 
-   const filmSlice = useSelector((state) => state.film);
+   const userSlice = useSelector((state) => state.user);
+
+   const [show, setShow] = useState(false);
 
    useEffect(() => {
-      dispatch(fetchFilms());
+      dispatch(fetchUsers());
 
-      if (filmSlice?.successDelete) {
-         dispatch(updateSuccessDelete(false));
+      if (userSlice?.successDelete) {
+         dispatch(updateSuccessDeleteUser(false));
       }
-   }, [filmSlice?.successDelete]);
-
-   // useEffect(() => {}, [filmSlice?.successDelete]);
+   }, [userSlice?.successDelete]);
 
    const onAddNew = () => {
-      navigate(paths.addFilm);
+      setShow(true);
    };
 
    const override = {
@@ -38,13 +42,19 @@ const Home = () => {
 
    return (
       <div className="flex-grow">
+         <AddUserModal
+            show={show}
+            onClose={() => setShow(false)}
+            // onDelete={onDelete}
+         />
+
          <div className="mt-10">
-            <h1 className="text-5xl font-semibold mt-6 mb-10">Film Manager</h1>
+            <h1 className="text-5xl font-semibold mt-6 mb-10">Users Manager</h1>
             <div className="relative w-full flex gap-5">
                <input
                   type="text"
                   className="w-[700px] pl-10 py-2 border border-second rounded-xl outline-none focus-within:border-primary-light group"
-                  placeholder="Search for movie name"
+                  placeholder="Search for account"
                />
                <BsSearch className="text-lg absolute top-3 left-3 opacity-50 group-focus-within:text-primary-light" />
                <button className="bg-primary py-2 px-8 rounded-lg text-white">
@@ -53,10 +63,10 @@ const Home = () => {
             </div>
             <div className="my-6">
                <button
-                  className="border border-primary hover:bg-primary py-2 px-6 rounded-lg text-primary hover:text-white"
+                  className="border border-primary hover:bg-primary py-2 px-4 rounded-lg text-primary hover:text-white"
                   onClick={onAddNew}
                >
-                  Add New Film
+                  Add New User
                </button>
             </div>
          </div>
@@ -66,13 +76,16 @@ const Home = () => {
                className="grid grid-cols-12 px-5 py-3 w-full border-b-2 border-hover-1
             font-medium text-[#7d7d7d]"
             >
-               <p className="col-span-1 text-secondary">Film Id</p>
-               <p className="col-span-3 text-secondary">Name</p>
-               <p className="col-span-2 text-secondary">Poster</p>
-               <p className="col-span-4 text-secondary">Description</p>
+               <p className="col-span-2 text-secondary">Account</p>
+               <p className="col-span-1 text-secondary">Type</p>
+               <p className="col-span-2 text-secondary">Full Name</p>
+               <p className="col-span-1 text-secondary">Password</p>
+               <p className="col-span-2 text-secondary">Email</p>
+               <p className="col-span-2 text-secondary">Phone</p>
                <p className="col-span-2 text-secondary">Actions</p>
             </div>
-            {filmSlice?.pending ? (
+
+            {userSlice?.pending ? (
                <div className="w-full h-96 flex items-center justify-center">
                   <SyncLoader
                      color="#3498DB"
@@ -83,8 +96,8 @@ const Home = () => {
                </div>
             ) : (
                <>
-                  {filmSlice?.entities.map((film) => (
-                     <FilmItem key={film.maPhim} info={film} />
+                  {userSlice?.entities.map((user) => (
+                     <UserItem key={user.taiKhoan} info={user} />
                   ))}
                </>
             )}
@@ -93,4 +106,4 @@ const Home = () => {
    );
 };
 
-export default Home;
+export default Users;

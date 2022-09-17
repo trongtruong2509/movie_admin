@@ -4,6 +4,7 @@ import AddFilm from "./../pages/AddFilm/AddFilm";
 import FilmDetail from "./../pages/FilmDetail/FilmDetail";
 import Showtime from "./../pages/Showtime/Showtime";
 import SignUp from "./../pages/SignUp/SignUp";
+import Users from "../pages/Users/Users";
 
 export const paths = {
    home: "/",
@@ -22,6 +23,7 @@ export const routes = [
    { path: paths.addFilm, component: AddFilm },
    { path: paths.filmDetail, component: FilmDetail },
    { path: paths.showtime, component: Showtime },
+   { path: paths.users, component: Users },
 ];
 
 // export default routes;

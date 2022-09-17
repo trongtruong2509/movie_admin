@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 
 //https://medium.com/tinyso/how-to-create-a-modal-component-in-react-from-basic-to-advanced-a3357a2a716a
 
-const Modal = ({ ...props }) => {
+const DeleteModal = ({ ...props }) => {
    if (!props.show) return null;
 
    return ReactDOM.createPortal(
@@ -16,10 +16,10 @@ const Modal = ({ ...props }) => {
             className="py-3 flex flex-col gap-2  bg-white w-96 rounded-xl p-4"
             onClick={(e) => e.stopPropagation()}
          >
-            <h2 className="text-xl pt-2 font-semibold">Delete Film</h2>
+            <h2 className="text-xl pt-2 font-semibold">Delete Confirm</h2>
             <p>
                Do you want to delete{" "}
-               <span className="font-semibold">{props.filmName}</span>?
+               <span className="font-semibold">{props.content}</span>?
             </p>
             <div className="flex gap-5 justify-end mt-4 text-sm">
                <button
@@ -42,4 +42,4 @@ const Modal = ({ ...props }) => {
    );
 };
 
-export default Modal;
+export default DeleteModal;

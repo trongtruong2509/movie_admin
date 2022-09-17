@@ -124,13 +124,13 @@ const FilmDetail = () => {
    return (
       <div className="flex-grow">
          <div className="mt-10">
-            <h1 className="text-5xl font-semibold mt-6 mb-10">Update Film</h1>
+            <h1 className="text-5xl font-semibold mt-6 mb-10">Film Detail</h1>
          </div>
 
          {film?.pending ? (
             <div className="w-full h-96 flex items-center justify-center">
                <SyncLoader
-                  color="#4340DA"
+                  color="#3498DB"
                   // loading={loading}
                   cssOverride={override}
                   size={15}

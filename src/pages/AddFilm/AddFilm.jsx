@@ -58,8 +58,6 @@ const AddFilm = () => {
       },
    });
 
-   useEffect(() => {}, []);
-
    useEffect(() => {
       formik.setFieldValue("dangChieu", nowShowing);
       formik.setFieldValue("sapChieu", coming);
@@ -242,7 +240,6 @@ const AddFilm = () => {
                   <button
                      type="submit"
                      className="bg-primary py-2 px-6 rounded-lg text-white"
-                     // onClick={() => formik.onSubmit()}
                   >
                      Add Film
                   </button>
