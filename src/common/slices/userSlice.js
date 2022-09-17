@@ -10,6 +10,14 @@ export const fetchUsers = createAsyncThunk("user/fetchAllUsers", async () => {
    return response.content;
 });
 
+export const queryUsers = createAsyncThunk("user/queryUsers", async (query) => {
+   const response = await userService.queryUsers(query);
+
+   console.log("[queryUsers]", response.content);
+
+   return response.content;
+});
+
 export const userLogin = createAsyncThunk(
    "user/userLoginStatus",
    async (info) => {
@@ -155,6 +163,22 @@ export const userSlice = createSlice({
          .addCase(updateUserInfo.rejected, (state, action) => {
             console.log("[updateUserInfo] rejected", action.payload);
             state.successDelete = false;
+            state.pending = false;
+         })
+         .addCase(queryUsers.pending, (state) => {
+            console.log("[queryUsers]", "loading");
+            state.pending = true;
+         })
+         .addCase(queryUsers.fulfilled, (state, action) => {
+            console.log("[queryUsers] success");
+            state.entities = action.payload;
+            state.success = true;
+            state.pending = false;
+         })
+         .addCase(queryUsers.rejected, (state, action) => {
+            console.log("[queryUsers] rejected", action.payload);
+            state.entities = [];
+            state.success = false;
             state.pending = false;
          });
    },

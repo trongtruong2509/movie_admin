@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
+import debounce from "lodash.debounce";
 import { BsSearch } from "react-icons/bs";
 import SyncLoader from "react-spinners/SyncLoader";
 
@@ -10,6 +11,7 @@ import { paths } from "../../app/routes";
 
 import {
    fetchUsers,
+   queryUsers,
    updateSuccessDeleteUser,
 } from "../../common/slices/userSlice";
 import UserItem from "./UserItem";
@@ -21,6 +23,7 @@ const Users = () => {
    const userSlice = useSelector((state) => state.user);
 
    const [show, setShow] = useState(false);
+   const [searchTerm, setSearchTerm] = useState("");
 
    useEffect(() => {
       dispatch(fetchUsers());
@@ -29,6 +32,24 @@ const Users = () => {
          dispatch(updateSuccessDeleteUser(false));
       }
    }, [userSlice?.successDelete]);
+
+   const updateQuery = () => {
+      if (searchTerm) {
+         dispatch(queryUsers(searchTerm));
+      } else {
+         dispatch(fetchUsers());
+      }
+   };
+
+   // debounce
+   const delayedQuery = useCallback(debounce(updateQuery, 500), [searchTerm]);
+
+   useEffect(() => {
+      delayedQuery();
+
+      // Cancel the debounce on useEffect cleanup.
+      return delayedQuery.cancel;
+   }, [searchTerm, delayedQuery]);
 
    const onAddNew = () => {
       setShow(true);
@@ -42,17 +63,15 @@ const Users = () => {
 
    return (
       <div className="flex-grow">
-         <AddUserModal
-            show={show}
-            onClose={() => setShow(false)}
-            // onDelete={onDelete}
-         />
+         <AddUserModal show={show} onClose={() => setShow(false)} />
 
          <div className="mt-10">
             <h1 className="text-5xl font-semibold mt-6 mb-10">Users Manager</h1>
             <div className="relative w-full flex gap-5">
                <input
                   type="text"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-[700px] pl-10 py-2 border border-second rounded-xl outline-none focus-within:border-primary-light group"
                   placeholder="Search for account"
                />

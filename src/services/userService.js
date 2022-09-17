@@ -28,6 +28,15 @@ export const getAllUsers = async () => {
    return res;
 };
 
+export const queryUsers = async (query) => {
+   const res = await httpRequest.get("/QuanLyNguoiDung/TimKiemNguoiDung", {
+      tuKhoa: query,
+   });
+
+   console.log("[queryUsers]", res);
+   return res;
+};
+
 export const updateUser = async (info) => {
    const res = await httpRequest.post(
       "/QuanLyNguoiDung/CapNhatThongTinNguoiDung",

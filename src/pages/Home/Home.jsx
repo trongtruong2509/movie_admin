@@ -1,7 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
+import debounce from "lodash.debounce";
 import { BsSearch } from "react-icons/bs";
 import SyncLoader from "react-spinners/SyncLoader";
 
@@ -9,12 +10,15 @@ import FilmItem from "./FilmItem";
 import { paths } from "../../app/routes";
 
 import { fetchFilms, updateSuccessDelete } from "../../common/slices/filmSlice";
+import { removeAccents } from "../../common/utils/helper";
 
 const Home = () => {
    const navigate = useNavigate();
    const dispatch = useDispatch();
 
    const filmSlice = useSelector((state) => state.film);
+   const [searchTerm, setSearchTerm] = useState("");
+   const [films, setFilms] = useState([]);
 
    useEffect(() => {
       dispatch(fetchFilms());
@@ -24,7 +28,38 @@ const Home = () => {
       }
    }, [filmSlice?.successDelete]);
 
-   // useEffect(() => {}, [filmSlice?.successDelete]);
+   useEffect(() => {
+      setFilms(filmSlice?.entities);
+   }, [filmSlice?.entities]);
+
+   const updateQuery = () => {
+      console.log("[searchTerm]", searchTerm);
+      if (searchTerm) {
+         const normalizeTerm = removeAccents(searchTerm);
+
+         const results = filmSlice?.entities.filter((f) =>
+            removeAccents(f.tenPhim.toLowerCase()).includes(normalizeTerm)
+         );
+
+         console.log("[results]", results);
+
+         setFilms(results);
+      } else {
+         if (filmSlice?.success) {
+            setFilms(filmSlice?.entities);
+         }
+      }
+   };
+
+   // debounce
+   const delayedQuery = useCallback(debounce(updateQuery, 500), [searchTerm]);
+
+   useEffect(() => {
+      delayedQuery();
+
+      // Cancel the debounce on useEffect cleanup.
+      return delayedQuery.cancel;
+   }, [searchTerm, delayedQuery]);
 
    const onAddNew = () => {
       navigate(paths.addFilm);
@@ -43,6 +78,8 @@ const Home = () => {
             <div className="relative w-full flex gap-5">
                <input
                   type="text"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-[700px] pl-10 py-2 border border-second rounded-xl outline-none focus-within:border-primary-light group"
                   placeholder="Search for movie name"
                />
@@ -76,14 +113,13 @@ const Home = () => {
                <div className="w-full h-96 flex items-center justify-center">
                   <SyncLoader
                      color="#3498DB"
-                     // loading={loading}
                      cssOverride={override}
                      size={15}
                   />
                </div>
             ) : (
                <>
-                  {filmSlice?.entities.map((film) => (
+                  {films.map((film) => (
                      <FilmItem key={film.maPhim} info={film} />
                   ))}
                </>
