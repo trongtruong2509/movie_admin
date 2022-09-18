@@ -28,7 +28,7 @@ export const createShowtime = createAsyncThunk(
    "showtime/createShowtimeStatus",
    async (info) => {
       const response = await showtimeService.createShowtime(info);
-      return response.content;
+      return response.data.content;
    }
 );
 

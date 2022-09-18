@@ -13,6 +13,7 @@ import Switch from "react-switch";
 import { paths } from "../../app/routes";
 import { getFilmById, updateFilm } from "../../common/slices/filmSlice";
 import { GROUP_ID } from "../../common/utils/config";
+import { addFilmSchema } from "./filmSchema";
 
 const override = {
    display: "block",
@@ -51,6 +52,7 @@ const FilmDetail = () => {
          danhGia: 0,
          hinhAnh: null,
       },
+      validationSchema: addFilmSchema,
       onSubmit: (values) => {
          console.log("[submit]", values);
 
@@ -124,33 +126,25 @@ const FilmDetail = () => {
    return (
       <div className="flex-grow">
          <div className="mt-10">
-            <h1 className="text-5xl font-semibold mt-6 mb-10">Film Detail</h1>
+            <h1 className="mt-6 mb-10 text-5xl font-semibold">Film Detail</h1>
          </div>
 
          {film?.pending ? (
-            <div className="w-full h-96 flex items-center justify-center">
-               <SyncLoader
-                  color="#3498DB"
-                  // loading={loading}
-                  cssOverride={override}
-                  size={15}
-               />
+            <div className="flex items-center justify-center w-full h-96">
+               <SyncLoader color="#3498DB" cssOverride={override} size={15} />
             </div>
          ) : (
-            <div className="mt-16 w-full flex gap-10">
+            <div className="flex w-full gap-10 mt-16">
                <div className="flex gap-6">
-                  <div className="w-80 h-auto rounded-lg">
+                  <div className="h-auto rounded-lg w-80">
                      {poster ? (
                         <div>
                            <img
                               src={newPoster ?? poster}
-                              className="w-full object-contain rounded-lg"
+                              className="object-contain w-full rounded-lg"
                            />
-                           <div className="mt-10 flex gap-5 items-center justify-center">
-                              <label
-                                 className="px-3 py-2 text-sm border text-primary-dark border-primary rounded-lg flex items-center gap-2 opacity-80 cursor-pointer
-                           hover:bg-primary hover:text-white hover:opacity-100"
-                              >
+                           <div className="flex items-center justify-center gap-5 mt-10">
+                              <label className="flex items-center gap-2 px-3 py-2 text-sm border rounded-lg cursor-pointer text-primary-dark border-primary opacity-80 hover:bg-primary hover:text-white hover:opacity-100">
                                  <MdCloudUpload className="text-xl" />
                                  New
                                  <input
@@ -164,8 +158,7 @@ const FilmDetail = () => {
                               </label>
                               {newPoster && (
                                  <button
-                                    className="px-2 py-2 text-sm text-gray-500 border border-gray-500 rounded-lg flex items-center gap-1 opacity-80
-                           hover:bg-gray-500 hover:text-white hover:opacity-100"
+                                    className="flex items-center gap-1 px-2 py-2 text-sm text-gray-500 border border-gray-500 rounded-lg opacity-80 hover:bg-gray-500 hover:text-white hover:opacity-100"
                                     onClick={onCancelPoster}
                                  >
                                     <AiOutlineDelete className="text-xl" />
@@ -175,7 +168,7 @@ const FilmDetail = () => {
                            </div>
                         </div>
                      ) : (
-                        <label className="w-full h-80 flex items-center rounded-lg justify-center flex-col gap-2 text-secondary text-lg opacity-50 cursor-pointer bg-hover-1">
+                        <label className="flex flex-col items-center justify-center w-full gap-2 text-lg rounded-lg opacity-50 cursor-pointer h-80 text-secondary bg-hover-1">
                            <p className="">Click here to upload film poster</p>
                            <MdCloudUpload className="w-8 h-8" />
                            <input
@@ -194,50 +187,77 @@ const FilmDetail = () => {
                   className="flex flex-col gap-4"
                   onSubmit={formik.handleSubmit}
                >
-                  <div className="flex gap-6 items-center ">
-                     <label className="w-24">Film Name</label>
-                     <input
-                        type="text"
-                        name="tenPhim"
-                        onChange={formik.handleChange}
-                        className="px-4 py-2 border border-gray-400 rounded-lg w-96 focus-within:border-primary outline-none"
-                        placeholder="Film Name"
-                        defaultValue={currentFilm?.tenPhim}
-                     />
+                  <div className="flex items-center ">
+                     <label className="w-40">Film Name</label>
+
+                     <div className="relative w-full">
+                        <input
+                           type="text"
+                           name="tenPhim"
+                           onChange={formik.handleChange}
+                           onBlur={formik.handleBlur}
+                           className={`px-4 py-2 border border-gray-400 rounded-lg outline-none w-96 focus-within:border-primary ${
+                              formik.errors.tenPhim && formik.touched.tenPhim
+                                 ? "border-red-500 focus-within:border-red-500"
+                                 : "border-gray-400 focus-within:border-primary"
+                           }`}
+                           placeholder="Enter film name"
+                           defaultValue={currentFilm?.tenPhim}
+                        />
+                        {formik.errors.tenPhim && formik.touched.tenPhim && (
+                           <p className="absolute left-0 text-xs text-red-600 -bottom-4">
+                              {formik.errors.tenPhim}
+                           </p>
+                        )}
+                     </div>
                   </div>
-                  <div className="flex gap-6 items-center ">
-                     <label className="w-24">Trailer</label>
-                     <input
-                        type="text"
-                        name="trailer"
-                        onChange={formik.handleChange}
-                        className="px-4 py-2 border border-gray-400 rounded-lg w-96 focus-within:border-primary outline-none"
-                        placeholder="Trailer link for film"
-                        defaultValue={currentFilm?.trailer}
-                     />
+                  <div className="flex items-center">
+                     <label className="w-40">Trailer</label>
+
+                     <div className="relative w-full">
+                        <input
+                           type="text"
+                           name="trailer"
+                           onChange={formik.handleChange}
+                           onBlur={formik.handleBlur}
+                           className={`px-4 py-2 border border-gray-400 rounded-lg outline-none w-96 focus-within:border-primary ${
+                              formik.errors.trailer && formik.touched.trailer
+                                 ? "border-red-500 focus-within:border-red-500"
+                                 : "border-gray-400 focus-within:border-primary"
+                           }`}
+                           placeholder="Trailer link for film"
+                           defaultValue={currentFilm?.trailer}
+                        />
+                        {formik.errors.trailer && formik.touched.trailer && (
+                           <p className="absolute left-0 text-xs text-red-600 -bottom-4">
+                              {formik.errors.trailer}
+                           </p>
+                        )}
+                     </div>
                   </div>
-                  <div className="flex gap-6 items-center ">
-                     <label className="w-24">Description</label>
-                     <textarea
-                        type="text"
-                        name="moTa"
-                        rows="4"
-                        onChange={formik.handleChange}
-                        className="px-4 py-2 border border-gray-400 rounded-lg w-96 focus-within:border-primary outline-none scrollbar"
-                        placeholder="Short description for film"
-                        defaultValue={currentFilm?.moTa}
-                     />
-                  </div>
-                  <div className="flex gap-6 items-center">
-                     <label className="w-24">Group</label>
-                     <input
-                        type="text"
-                        name="maNhom"
-                        onChange={formik.handleChange}
-                        className="pl-4 py-2 border border-gray-400 rounded-lg w-32 focus-within:border-primary outline-none"
-                        placeholder="Group"
-                        defaultValue={currentFilm?.maNhom}
-                     />
+                  <div className="flex items-center">
+                     <label className="w-40">Description</label>
+                     <div className="relative w-full">
+                        <textarea
+                           type="text"
+                           name="moTa"
+                           rows="4"
+                           onChange={formik.handleChange}
+                           onBlur={formik.handleBlur}
+                           className={`px-4 py-2 border border-gray-400 rounded-lg outline-none w-96 focus-within:border-primary ${
+                              formik.errors.moTa && formik.touched.moTa
+                                 ? "border-red-500 focus-within:border-red-500"
+                                 : "border-gray-400 focus-within:border-primary"
+                           }`}
+                           placeholder="Short description for film"
+                           defaultValue={currentFilm?.moTa}
+                        />
+                        {formik.errors.moTa && formik.touched.moTa && (
+                           <p className="absolute left-0 text-xs text-red-600 -bottom-4">
+                              {formik.errors.moTa}
+                           </p>
+                        )}
+                     </div>
                   </div>
                   <div className="flex items-center">
                      <label className="w-40">Release Date</label>
@@ -245,7 +265,7 @@ const FilmDetail = () => {
                         selected={releaseDate}
                         dateFormat="dd/MM/yyyy"
                         onChange={(date) => handleDateChange(date)}
-                        className="px-4 py-2 border border-gray-400 rounded-lg w-40 focus-within:border-primary outline-none"
+                        className="w-40 px-4 py-2 border border-gray-400 rounded-lg outline-none focus-within:border-primary"
                      />
                   </div>
                   <div className="flex items-center ">
@@ -303,19 +323,24 @@ const FilmDetail = () => {
                         min="0"
                         max="10"
                         type="number"
-                        className="pl-4 py-2 border border-gray-400 rounded-lg w-32 focus-within:border-primary outline-none"
+                        className="w-32 py-2 pl-4 border border-gray-400 rounded-lg outline-none focus-within:border-primary"
                      />
                   </div>
-                  <div className="my-12 flex gap-6 items-center justify-end">
+                  <div className="flex items-center justify-end gap-6 my-12">
                      <button
-                        className="bg-gray-500 py-2 px-6 rounded-lg text-white"
+                        className="px-6 py-2 text-white bg-gray-500 rounded-lg"
                         onClick={onCancel}
                      >
                         Back to Home
                      </button>
                      <button
                         type="submit"
-                        className="bg-primary py-2 px-6 rounded-lg text-white"
+                        className={`px-6 py-2 text-white rounded-lg bg-primary ${
+                           formik.isValid && formik.dirty
+                              ? "opacity-100"
+                              : "opacity-50"
+                        }`}
+                        disabled={!(formik.isValid && formik.dirty)}
                      >
                         Update Film
                      </button>

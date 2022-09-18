@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
 
 import * as userService from "../../services/userService";
 
@@ -20,24 +21,43 @@ export const queryUsers = createAsyncThunk("user/queryUsers", async (query) => {
 
 export const userLogin = createAsyncThunk(
    "user/userLoginStatus",
-   async (info) => {
-      const response = await userService.login(info);
-      return response.content;
+   async (info, { rejectWithValue }) => {
+      try {
+         const response = await userService.login(info);
+         return response.data.content;
+      } catch (err) {
+         if (!err.response) {
+            throw err;
+         }
+
+         return rejectWithValue(err.response.data);
+      }
    }
 );
 
-export const signUp = createAsyncThunk("user/signUpStatus", async (info) => {
-   const response = await userService.signup(info);
+export const signUp = createAsyncThunk(
+   "user/signUpStatus",
+   async (info, { rejectWithValue }) => {
+      try {
+         const response = await userService.signup(info);
 
-   return response.content;
-});
+         return response.data.content;
+      } catch (err) {
+         if (!err.response) {
+            throw err;
+         }
+
+         return rejectWithValue(err.response.data);
+      }
+   }
+);
 
 export const updateUserInfo = createAsyncThunk(
    "user/updateUserInfoStatus",
    async (info) => {
       const response = await userService.updateUser(info);
 
-      return response.content;
+      return response.data.content;
    }
 );
 
@@ -89,14 +109,12 @@ export const userSlice = createSlice({
             state.allow = true;
             state.success = true;
             state.pending = false;
+            toast.info("Login successfully");
             localStorage.setItem("accessToken", action.payload.accessToken);
 
-            if (state.remember) {
-               localStorage.setItem(
-                  "currentUser",
-                  JSON.stringify(action.payload)
-               );
-            }
+            // if (state.remember) {
+            localStorage.setItem("currentUser", JSON.stringify(action.payload));
+            // }
          })
          .addCase(userLogin.rejected, (state, action) => {
             console.log("[userLogin] rejected", action.payload);
@@ -104,6 +122,7 @@ export const userSlice = createSlice({
             state.allow = false;
             state.success = false;
             state.pending = false;
+            toast.error(action.payload.content);
          })
          .addCase(signUp.pending, (state) => {
             console.log("[signUp]", "loading");
@@ -113,12 +132,14 @@ export const userSlice = createSlice({
             console.log("[signUp] success", action.payload);
             state.allow = true;
             state.success = true;
+            toast.info("New account created");
             state.pending = false;
          })
          .addCase(signUp.rejected, (state, action) => {
             console.log("[signUp] rejected", action.payload);
             state.allow = false;
             state.success = false;
+            toast.error(action.payload.content);
             state.pending = false;
          })
          .addCase(fetchUsers.pending, (state) => {

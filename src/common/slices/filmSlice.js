@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import * as httpRequest from "../utils/httpRequest";
+import { toast } from "react-toastify";
 
 const initialState = {
    entities: [],
@@ -34,23 +35,39 @@ export const getFilmById = createAsyncThunk(
 
 export const addNewFilm = createAsyncThunk(
    "films/addNewFilmStatus",
-   async (formData) => {
-      const response = await httpRequest.post(
-         "/QuanLyPhim/ThemPhimUploadHinh",
-         formData
-      );
-      return response.data;
+   async (formData, { rejectWithValue }) => {
+      try {
+         const response = await httpRequest.post(
+            "/QuanLyPhim/ThemPhimUploadHinh",
+            formData
+         );
+         return response.data.data;
+      } catch (err) {
+         if (!err.response) {
+            throw err;
+         }
+
+         return rejectWithValue(err.response.data);
+      }
    }
 );
 
 export const updateFilm = createAsyncThunk(
    "films/updateFilmStatus",
-   async (formData) => {
-      const response = await httpRequest.post(
-         "/QuanLyPhim/CapNhatPhimUpload",
-         formData
-      );
-      return response.content;
+   async (formData, { rejectWithValue }) => {
+      try {
+         const response = await httpRequest.post(
+            "/QuanLyPhim/CapNhatPhimUpload",
+            formData
+         );
+         return response.data.content;
+      } catch (err) {
+         if (!err.response) {
+            throw err;
+         }
+
+         return rejectWithValue(err.response.data);
+      }
    }
 );
 
@@ -72,7 +89,7 @@ export const filmSlice = createSlice({
          state.selected = action.payload;
       },
       updateAllow: (state, action) => {
-         state.success = action.payload;
+         state.allow = action.payload;
       },
       updateSuccessDelete: (state, action) => {
          state.successDelete = action.payload;
@@ -105,6 +122,14 @@ export const filmSlice = createSlice({
          .addCase(addNewFilm.fulfilled, (state, action) => {
             console.log("[addNewFilm] fulfilled", action.payload);
             state.allow = true;
+            toast.info("Add new film successfully");
+            state.success = true;
+            state.pending = false;
+         })
+         .addCase(addNewFilm.rejected, (state, action) => {
+            console.log("[addNewFilm] rejected", action.payload);
+            state.allow = false;
+            toast.error(action.payload.content);
             state.success = false;
             state.pending = false;
          })
@@ -117,6 +142,13 @@ export const filmSlice = createSlice({
 
             state.selected = action.payload;
             state.allow = true;
+            state.success = false;
+            state.pending = false;
+            toast.info(`Film ${action.payload.tenPhim} updated`);
+         })
+         .addCase(updateFilm.rejected, (state, action) => {
+            console.log("[updateFilm] rejected", action.payload);
+            toast.error(action.payload.content);
             state.success = false;
             state.pending = false;
          })

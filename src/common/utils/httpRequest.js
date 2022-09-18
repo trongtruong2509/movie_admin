@@ -23,11 +23,11 @@ export const get = async (path, params = {}, options = {}) => {
       },
       ...options,
    });
+
    return response.data;
 };
 
 export const post = async (path, data, options = {}) => {
-   console.log("[options]", options);
    const response = await httpRequest.post(path, data, {
       headers: {
          ...defaultHeader,
@@ -35,7 +35,10 @@ export const post = async (path, data, options = {}) => {
       },
       ...options,
    });
-   return response.data;
+
+   // console.log("[aaaaaaaaa]", params);
+
+   return response;
 };
 
 export const put = async (path, data, options = {}) => {
