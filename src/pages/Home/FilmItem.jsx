@@ -35,10 +35,7 @@ const FilmItem = ({ info }) => {
    };
 
    return (
-      <div
-         className="w-full py-2 px-5 rounded-lg grid grid-cols-12
-                     cursor-pointer hover:bg-hover-1 group"
-      >
+      <div className="grid w-full grid-cols-12 px-5 py-2 rounded-lg cursor-pointer hover:bg-hover-1 group">
          <DeleteModal
             show={show}
             content={info?.tenPhim}
@@ -48,35 +45,35 @@ const FilmItem = ({ info }) => {
 
          <p className="col-span-1">{info?.maPhim}</p>
          <div
-            className="col-span-3 hover:text-primary font-semibold"
+            className="col-span-4 font-semibold xl:col-span-3 hover:text-primary"
             onClick={onEdit}
          >
             {info?.tenPhim}
          </div>
-         <div className="col-span-2 w-16 h-20">
+         <div className="w-16 h-20 col-span-1">
             <img
                src={info?.hinhAnh}
                alt=""
-               className="w-full h-full object-contain rounded-md"
+               className="object-contain w-full h-full rounded-md"
             />
          </div>
-         <p className="col-span-4 line-clamp overflow-hidden pr-6 py-1">
+         <p className="col-span-4 py-1 pr-6 overflow-hidden line-clamp">
             {info?.moTa}
          </p>
-         <div className="col-span-2 text-white flex gap-3">
+         <div className="flex col-span-1 gap-3 text-white xl:col-span-2">
             <button
                className="bg-primary rounded-lg h-[36px] px-3 py-1 flex gap-1 items-center justify-center opacity-70 hover:opacity-100"
                onClick={onEdit}
             >
                <FiEdit />
-               Edit
+               <span className="hidden 2xl:inline-block">Edit</span>
             </button>
             <button
                className="bg-primary-dark rounded-lg h-[36px] px-3 py-1 flex gap-1 items-center justify-center opacity-70 hover:opacity-100"
                onClick={onShowtime}
             >
                <FiMonitor />
-               Time
+               <span className="hidden 2xl:inline-block">Time</span>
             </button>
             <button
                className="rounded-lg h-[36px] px-2 py-1 flex gap-1 items-center justify-center border border-red-500 text-red-600
@@ -84,7 +81,7 @@ const FilmItem = ({ info }) => {
                onClick={() => setShow(true)}
             >
                <AiOutlineDelete />
-               Delete
+               <span className="hidden 2xl:inline-block">Delete</span>
             </button>
          </div>
       </div>

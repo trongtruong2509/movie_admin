@@ -65,7 +65,7 @@ function Layout() {
    return userLogged ? (
       <div className="flex w-screen h-screen App">
          <Sidebar />
-         <div className="relative flex items-stretch flex-grow w-full px-12 overflow-auto overflow-y-scroll overscroll-auto scrollbar">
+         <div className="relative flex items-stretch flex-grow w-full px-5 overflow-auto overflow-y-scroll xl:px-12 overscroll-auto scrollbar">
             <Outlet />
          </div>
          <ToastContainer

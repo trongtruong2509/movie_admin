@@ -74,23 +74,23 @@ const Home = () => {
    return (
       <div className="flex-grow">
          <div className="mt-10">
-            <h1 className="text-5xl font-semibold mt-6 mb-10">Film Manager</h1>
-            <div className="relative w-full flex gap-5">
+            <h1 className="mt-6 mb-10 text-5xl font-semibold">Film Manager</h1>
+            <div className="relative flex w-full gap-5">
                <input
                   type="text"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-[700px] pl-10 py-2 border border-second rounded-xl outline-none focus-within:border-primary-light group"
+                  className="lg:w-[800px] w-96 pl-10 py-2 border border-second rounded-xl outline-none focus-within:border-primary-light group"
                   placeholder="Search for movie name"
                />
-               <BsSearch className="text-lg absolute top-3 left-3 opacity-50 group-focus-within:text-primary-light" />
-               <button className="bg-primary py-2 px-8 rounded-lg text-white">
+               <BsSearch className="absolute text-lg opacity-50 top-3 left-3 group-focus-within:text-primary-light" />
+               {/* <button className="px-8 py-2 text-white rounded-lg bg-primary">
                   Search
-               </button>
+               </button> */}
             </div>
             <div className="my-6">
                <button
-                  className="border border-primary hover:bg-primary py-2 px-6 rounded-lg text-primary hover:text-white"
+                  className="px-6 py-2 border rounded-lg border-primary hover:bg-primary text-primary hover:text-white"
                   onClick={onAddNew}
                >
                   Add New Film
@@ -98,19 +98,21 @@ const Home = () => {
             </div>
          </div>
 
-         <div className="mt-6 w-full">
+         <div className="w-full mt-6">
             <div
                className="grid grid-cols-12 px-5 py-3 w-full border-b-2 border-hover-1
             font-medium text-[#7d7d7d]"
             >
                <p className="col-span-1 text-secondary">Film Id</p>
-               <p className="col-span-3 text-secondary">Name</p>
-               <p className="col-span-2 text-secondary">Poster</p>
+               <p className="col-span-4 xl:col-span-3 text-secondary">Name</p>
+               <p className="col-span-1 text-secondary">Poster</p>
                <p className="col-span-4 text-secondary">Description</p>
-               <p className="col-span-2 text-secondary">Actions</p>
+               <p className="col-span-1 xl:col-span-2 text-secondary">
+                  Actions
+               </p>
             </div>
             {filmSlice?.pending ? (
-               <div className="w-full h-96 flex items-center justify-center">
+               <div className="flex items-center justify-center w-full h-96">
                   <SyncLoader
                      color="#3498DB"
                      cssOverride={override}

@@ -70,13 +70,13 @@ const Users = () => {
                   type="text"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-[700px] pl-10 py-2 border border-second rounded-xl outline-none focus-within:border-primary-light group"
+                  className="xl:w-[800px] w-96 pl-10 py-2 border border-second rounded-xl outline-none focus-within:border-primary-light group"
                   placeholder="Search for account"
                />
                <BsSearch className="absolute text-lg opacity-50 top-3 left-3 group-focus-within:text-primary-light" />
-               <button className="px-8 py-2 text-white rounded-lg bg-primary">
+               {/* <button className="px-8 py-2 text-white rounded-lg bg-primary">
                   Search
-               </button>
+               </button> */}
             </div>
             <div className="my-6">
                <button

@@ -124,7 +124,7 @@ const FilmDetail = () => {
    };
 
    return (
-      <div className="flex-grow">
+      <div className="flex-grow ">
          <div className="mt-10">
             <h1 className="mt-6 mb-10 text-5xl font-semibold">Film Detail</h1>
          </div>
@@ -134,7 +134,7 @@ const FilmDetail = () => {
                <SyncLoader color="#3498DB" cssOverride={override} size={15} />
             </div>
          ) : (
-            <div className="flex w-full gap-10 mt-16">
+            <div className="w-full gap-10 px-12 mt-16 lg:flex lg:px-0">
                <div className="flex gap-6">
                   <div className="h-auto rounded-lg w-80">
                      {poster ? (
@@ -184,7 +184,7 @@ const FilmDetail = () => {
                   </div>
                </div>
                <form
-                  className="flex flex-col gap-4"
+                  className="flex flex-col gap-4 mt-10 xl:mt-0"
                   onSubmit={formik.handleSubmit}
                >
                   <div className="flex items-center ">

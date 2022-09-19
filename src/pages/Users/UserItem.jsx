@@ -39,8 +39,7 @@ const UserItem = ({ info }) => {
 
    return (
       <div
-         className="w-full py-2 px-5 rounded-lg grid grid-cols-12
-       hover:bg-hover-1 group"
+         className="grid w-full grid-cols-12 px-5 py-2 rounded-lg hover:bg-hover-1 group"
       >
          <DeleteModal
             show={showDelete}
@@ -55,47 +54,40 @@ const UserItem = ({ info }) => {
             onClose={() => setShowUpdate(false)}
          />
 
-         <p className="col-span-2 w-full pr-3 truncate flex items-center">
+         <p className="flex items-center w-full col-span-2 pr-3 truncate">
             {info?.taiKhoan}
          </p>
-         <p className="col-span-1 flex items-center">{info?.maLoaiNguoiDung}</p>
-         <p className="col-span-2 w-full pr-3 truncate flex items-center">
+         <p className="flex items-center col-span-1">{info?.maLoaiNguoiDung}</p>
+         <p className="flex items-center w-full col-span-2 pr-3 truncate">
             {info?.hoTen}
          </p>
          <input
             type="password"
             defaultValue={info?.matKhau}
             readOnly
-            className="bg-transparent outline-none hover:bg-transparent cursor-default"
+            className="bg-transparent outline-none cursor-default hover:bg-transparent"
          />
          {/* <p className="col-span-1">{info?.matKhau}</p> */}
-         <p className="col-span-2 w-full pr-3 truncate flex items-center">
+         <p className="flex items-center w-full col-span-2 pr-3 truncate">
             {info?.email}
          </p>
-         <p className="col-span-2 flex items-center">{info?.soDT}</p>
+         <p className="flex items-center col-span-2">{info?.soDT}</p>
 
-         <div className="col-span-2 text-white flex gap-3">
+         <div className="flex col-span-2 gap-3 text-white">
             <button
                className="bg-primary rounded-lg h-[36px] px-3 py-1 flex gap-1 items-center justify-center opacity-70 hover:opacity-100"
                onClick={() => setShowUpdate(true)}
             >
                <FiEdit />
-               Edit
+               <span className="hidden 2xl:inline-block">Edit</span>
             </button>
-            {/* <button
-               className="bg-primary-dark rounded-lg h-[36px] px-3 py-1 flex gap-1 items-center justify-center opacity-70 hover:opacity-100"
-               onClick={onShowtime}
-            >
-               <FiMonitor />
-               Time
-            </button> */}
             <button
                className="rounded-lg h-[36px] px-2 py-1 flex gap-1 items-center justify-center border border-red-500 text-red-600
             hover:bg-red-600 hover:text-white opacity-70 hover:opacity-100"
                onClick={() => setShowDelete(true)}
             >
                <AiOutlineDelete />
-               Delete
+               <span className="hidden 2xl:inline-block">Delete</span>
             </button>
          </div>
       </div>

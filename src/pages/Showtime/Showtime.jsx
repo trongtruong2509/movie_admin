@@ -22,7 +22,6 @@ import TextField from "@mui/material/TextField";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
-import { showtimeSchema } from "./showtimeSchema";
 
 const Showtime = () => {
    const params = useParams();
