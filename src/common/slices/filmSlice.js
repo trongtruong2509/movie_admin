@@ -73,11 +73,19 @@ export const updateFilm = createAsyncThunk(
 
 export const deleteFilmById = createAsyncThunk(
    "films/deleteFilmByIdStatus",
-   async (id) => {
-      const response = await httpRequest.Delete("/QuanLyPhim/XoaPhim", {
-         MaPhim: id,
-      });
-      return response.content;
+   async (id, { rejectWithValue }) => {
+      try {
+         const response = await httpRequest.Delete("/QuanLyPhim/XoaPhim", {
+            MaPhim: id,
+         });
+         return response.data.content;
+      } catch (err) {
+         if (!err.response) {
+            throw err;
+         }
+
+         return rejectWithValue(err.response.data);
+      }
    }
 );
 
@@ -171,12 +179,14 @@ export const filmSlice = createSlice({
 
             state.successDelete = true;
             state.pending = false;
+            toast.warn("Film deleted successfully");
          })
          .addCase(deleteFilmById.rejected, (state, action) => {
             console.log("[deleteFilmById] rejected", action.payload);
 
             state.successDelete = false;
             state.pending = false;
+            toast.error(action.payload.content);
          });
    },
 });

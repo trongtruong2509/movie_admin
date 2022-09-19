@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import * as showtimeService from "../../services/showtimeService";
+import { toast } from "react-toastify";
 
 const initialState = {
    chain: null,
@@ -26,73 +27,58 @@ export const getClusterId = createAsyncThunk(
 
 export const createShowtime = createAsyncThunk(
    "showtime/createShowtimeStatus",
-   async (info) => {
-      const response = await showtimeService.createShowtime(info);
-      return response.data.content;
+   async (info, { rejectWithValue }) => {
+      try {
+         const response = await showtimeService.createShowtime(info);
+         return response.data.content;
+      } catch (err) {
+         if (!err.response) {
+            throw err;
+         }
+
+         return rejectWithValue(err.response.data);
+      }
    }
 );
 
 export const showtimeSlice = createSlice({
    name: "showtime",
    initialState,
-   reducers: {
-      updateUser: (state, action) => {
-         // state.current = action.payload;
-      },
-      updateAllow: (state, action) => {
-         // state.allow = action.payload;
-      },
-      updateRemember: (state, action) => {
-         // state.remember = action.payload;
-      },
-   },
+   reducers: {},
    extraReducers: (builder) => {
-      // Add reducers for additional action types here, and handle loading state as needed
       builder
          .addCase(getChain.pending, (state) => {
-            // Add user to the state array
             console.log("[getChain]", "loading");
-            // state.pending = true;
          })
          .addCase(getChain.fulfilled, (state, action) => {
-            // Add user to the state array
             console.log("[getChain] success", action.payload);
             state.chain = action.payload;
          })
          .addCase(getChain.rejected, (state, action) => {
-            // Add user to the state array
             console.log("[getChain] rejected", action.payload);
             state.chain = null;
          })
          .addCase(getClusterId.pending, (state) => {
-            // Add user to the state array
             console.log("[getClusterId]", "loading");
-            // state.pending = true;
          })
          .addCase(getClusterId.fulfilled, (state, action) => {
-            // Add user to the state array
             console.log("[getClusterId] success", action.payload);
             state.cluster = action.payload;
          })
          .addCase(getClusterId.rejected, (state, action) => {
-            // Add user to the state array
             console.log("[getClusterId] rejected", action.payload);
             state.cluster = null;
          })
          .addCase(createShowtime.pending, (state) => {
-            // Add user to the state array
             console.log("[createShowtime]", "loading");
-            // state.pending = true;
          })
          .addCase(createShowtime.fulfilled, (state, action) => {
-            // Add user to the state array
             console.log("[createShowtime] success", action.payload);
-            // state.cluster = action.payload;
+            toast.info("New showtime added!");
          })
          .addCase(createShowtime.rejected, (state, action) => {
-            // Add user to the state array
             console.log("[createShowtime] rejected", action.payload);
-            // state.cluster = null;
+            toast.error(action.payload.content);
          });
    },
 });

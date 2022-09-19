@@ -6,9 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import moment from "moment";
 
 import { useFormik } from "formik";
-import SyncLoader from "react-spinners/SyncLoader";
 import DatePicker from "react-datepicker";
-// import TimePicker from "rc-time-picker";
 
 import {
    createShowtime,
@@ -20,14 +18,11 @@ import { paths } from "../../app/routes";
 
 import "rc-time-picker/assets/index.css";
 
-import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
-import DateTimePicker from "@mui/lab/DateTimePicker";
-import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
-import MobileDatePicker from "@mui/lab/MobileDatePicker";
+import { showtimeSchema } from "./showtimeSchema";
 
 const Showtime = () => {
    const params = useParams();
@@ -92,7 +87,7 @@ const Showtime = () => {
       <LocalizationProvider dateAdapter={AdapterDateFns}>
          <div className="flex-grow">
             <div className="mt-10">
-               <h1 className="text-5xl font-semibold mt-6 mb-10">
+               <h1 className="mt-6 mb-10 text-5xl font-semibold">
                   Create Showtime
                </h1>
                <div className="pb-4">
@@ -105,18 +100,15 @@ const Showtime = () => {
                </div>
             </div>
 
-            <div className="mt-6 w-full">
+            <div className="w-full mt-6">
                <form
-                  className="max-w-md w-full flex flex-col gap-5"
+                  className="flex flex-col w-full max-w-md gap-5"
                   onSubmit={formik.handleSubmit}
                >
-                  <div className="relative flex gap-3 items-center">
+                  <div className="relative flex items-center gap-3">
                      <label className="w-40 capitalize">theater </label>
                      <select
-                        className="form-select form-select-lg appearance-none block w-full px-4 py-4 m-0 rounded-lg
-                     text-xl font-normaltext-gray-700 bg-white bg-clip-padding bg-no-repeat bg-transparent
-                     border border-solid border-gray-300 rounde transition ease-in-out
-                     focus:text-gray-700  focus:border-blue-600 focus:outline-none"
+                        className="block w-full px-4 py-4 m-0 text-xl transition ease-in-out bg-transparent bg-white bg-no-repeat border border-gray-300 border-solid rounded-lg appearance-none form-select form-select-lg font-normaltext-gray-700 bg-clip-padding rounde focus:text-gray-700 focus:border-blue-600 focus:outline-none"
                         aria-label=".form-select-lg example"
                         onChange={(e) => setSelectedChainId(e.target.value)}
                      >
@@ -128,15 +120,12 @@ const Showtime = () => {
                               </option>
                            ))}
                      </select>
-                     <MdKeyboardArrowDown className="absolute top-3 right-2 text-4xl opacity-50 -z-10" />
+                     <MdKeyboardArrowDown className="absolute text-4xl opacity-50 top-3 right-2 -z-10" />
                   </div>
-                  <div className="relative flex gap-3 items-center">
+                  <div className="relative flex items-center gap-3">
                      <label className="w-40 capitalize">Cluster</label>
                      <select
-                        className="form-select form-select-lg appearance-none block w-full px-4 py-4 m-0 rounded-lg
-                     text-xl font-normaltext-gray-700 bg-white bg-clip-padding bg-no-repeat bg-transparent
-                     border border-solid border-gray-300 rounde transition ease-in-out
-                     focus:text-gray-700  focus:border-blue-600 focus:outline-none"
+                        className="block w-full px-4 py-4 m-0 text-xl transition ease-in-out bg-transparent bg-white bg-no-repeat border border-gray-300 border-solid rounded-lg appearance-none form-select form-select-lg font-normaltext-gray-700 bg-clip-padding rounde focus:text-gray-700 focus:border-blue-600 focus:outline-none"
                         aria-label=".form-select-lg example"
                         onChange={(e) => setSelectedClusterId(e.target.value)}
                      >
@@ -148,7 +137,7 @@ const Showtime = () => {
                               </option>
                            ))}
                      </select>
-                     <MdKeyboardArrowDown className="absolute top-3 right-2 text-4xl opacity-50 -z-10" />
+                     <MdKeyboardArrowDown className="absolute text-4xl opacity-50 top-3 right-2 -z-10" />
                   </div>
                   <div className="flex items-center gap-3">
                      <label className="w-40">Date</label>
@@ -156,25 +145,11 @@ const Showtime = () => {
                         selected={showDate}
                         dateFormat="dd/MM/yyyy"
                         onChange={(date) => setShowDate(date)}
-                        className="px-4 py-4 border border-gray-400 rounded-md w-full focus-within:border-primary outline-none"
+                        className="w-full px-4 py-4 border border-gray-400 rounded-md outline-none focus-within:border-primary"
                      />
                   </div>
                   <div className="flex items-center gap-3">
                      <label className="w-40">Time</label>
-                     {/* <TimePicker
-                        value={showTime}
-                        onChange={(e) => setShowTime(e)}
-                        showSecond={false}
-                        className="w-full"
-                     /> */}
-                     {/* <DesktopTimePicker
-                        label="For desktop"
-                        // value={value}
-                        // onChange={(newValue) => {
-                        //    setValue(newValue);
-                        // }}
-                        renderInput={(params) => <TextField {...params} />}
-                     /> */}
                      <TimePicker
                         label="Time"
                         value={showTime}
@@ -184,7 +159,7 @@ const Showtime = () => {
                         toolbarTitle={false}
                      />
                   </div>
-                  <div className="flex gap-3 items-center ">
+                  <div className="flex items-center gap-3 ">
                      <label className="w-36">Ticket (VND)</label>
                      <input
                         type="number"
@@ -193,20 +168,20 @@ const Showtime = () => {
                         min={100000}
                         max={300000}
                         step={5000}
-                        className="px-4 py-4 border border-gray-400 rounded-lg w-96 focus-within:border-primary outline-none"
+                        className="px-4 py-4 border border-gray-400 rounded-lg outline-none w-96 focus-within:border-primary"
                         defaultValue={135000}
                      />
                   </div>
-                  <div className="my-12 flex gap-6 items-center justify-end">
+                  <div className="flex items-center justify-end gap-6 my-12">
                      <button
-                        className=" text-gray-500 py-2 px-3 rounded-lg border border-gray-500 hover:text-white hover:bg-gray-500"
+                        className="px-3 py-2 text-gray-500 border border-gray-500 rounded-lg hover:text-white hover:bg-gray-500"
                         onClick={onCancel}
                      >
                         Back to Home
                      </button>
                      <button
                         type="submit"
-                        className="bg-primary py-2 px-3 rounded-lg text-white"
+                        className="px-3 py-2 text-white rounded-lg bg-primary"
                      >
                         Create Showtime
                      </button>

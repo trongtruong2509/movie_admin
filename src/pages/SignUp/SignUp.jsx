@@ -144,30 +144,6 @@ const SignUp = () => {
                                     )}
                               </div>
                            </div>
-                           {/* <div className="flex items-center gap-3 ">
-                              <label className="w-28">Group</label>
-                              <div className="relative w-full">
-                                 <input
-                                    type="text"
-                                    name="maNhom"
-                                    onChange={formik.handleChange}
-                                    onBlur={formik.handleBlur}
-                                    className={`w-full px-4 py-2 border rounded-lg outline-none focus-within:border-primary ${
-                                       formik.errors.maNhom &&
-                                       formik.touched.maNhom
-                                          ? "border-red-500 focus-within:border-red-500"
-                                          : "border-gray-400 focus-within:border-primary"
-                                    }`}
-                                    placeholder="Enter your group ID"
-                                 />
-                                 {formik.errors.maNhom &&
-                                    formik.touched.maNhom && (
-                                       <p className="absolute left-0 text-xs text-red-600 -bottom-4">
-                                          {formik.errors.maNhom}
-                                       </p>
-                                    )}
-                              </div>
-                           </div> */}
                            <div className="flex items-center gap-3 ">
                               <label className="w-28">Email</label>
                               <div className="relative w-full">

@@ -63,10 +63,18 @@ export const updateUserInfo = createAsyncThunk(
 
 export const deleteUserById = createAsyncThunk(
    "user/deleteUserByIdStatus",
-   async (info) => {
-      const response = await userService.deleteUser(info);
+   async (info, { rejectWithValue }) => {
+      try {
+         const response = await userService.deleteUser(info);
 
-      return response.content;
+         return response.data.content;
+      } catch (err) {
+         if (!err.response) {
+            throw err;
+         }
+
+         return rejectWithValue(err.response.data);
+      }
    }
 );
 
@@ -166,11 +174,13 @@ export const userSlice = createSlice({
             console.log("[deleteUserById] success");
             state.successDelete = true;
             state.pending = false;
+            toast.warn("User account deleted");
          })
          .addCase(deleteUserById.rejected, (state, action) => {
             console.log("[deleteUserById] rejected", action.payload);
             state.successDelete = false;
             state.pending = false;
+            toast.error(action.payload.content);
          })
          .addCase(updateUserInfo.pending, (state) => {
             console.log("[updateUserInfo]", "loading");
@@ -180,11 +190,13 @@ export const userSlice = createSlice({
             console.log("[updateUserInfo] success");
             state.successDelete = true;
             state.pending = false;
+            toast.info("Account info updated!");
          })
          .addCase(updateUserInfo.rejected, (state, action) => {
             console.log("[updateUserInfo] rejected", action.payload);
             state.successDelete = false;
             state.pending = false;
+            toast.error(action.payload.content);
          })
          .addCase(queryUsers.pending, (state) => {
             console.log("[queryUsers]", "loading");

@@ -65,7 +65,7 @@ export const Delete = async (path, payload, options = {}) => {
       },
       ...options,
    });
-   return response.data;
+   return response;
 };
 
 export default httpRequest;
