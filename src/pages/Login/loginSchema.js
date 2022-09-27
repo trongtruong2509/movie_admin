@@ -9,9 +9,9 @@ export const loginSchema = yup.object().shape({
       .required("Required"),
    matKhau: yup
       .string()
-      .min(8, "Must be at least 8 characters")
-      .matches(passwordRules, {
-         message: "At least 1 lower case letter, 1 numeric digit",
-      })
+      // .min(8, "Must be at least 8 characters")
+      // .matches(passwordRules, {
+      //    message: "At least 1 lower case letter, 1 numeric digit",
+      // })
       .required("Required"),
 });

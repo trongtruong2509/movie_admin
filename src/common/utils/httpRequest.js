@@ -1,10 +1,9 @@
 import axios from "axios";
-import { BASE_URL, GROUP_ID } from "./config";
+import { ACCESS_TOKEN, BASE_URL, GROUP_ID, TOKEN } from "./config";
 
 const defaultHeader = {
    accept: "application/json",
-   TokenCybersoft:
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0ZW5Mb3AiOiJGcm9udCBFbmQgNzIiLCJIZXRIYW5TdHJpbmciOiIxNC8wMi8yMDIzIiwiSGV0SGFuVGltZSI6IjE2NzYzMzI4MDAwMDAiLCJuYmYiOjE2NTAzODc2MDAsImV4cCI6MTY3NjQ4MDQwMH0.e3UrKdKqwFislz0cqribEEthuaW4HOuD4xwr1CTRQwg",
+   TokenCybersoft: TOKEN,
 };
 
 const httpRequest = axios.create({
@@ -31,7 +30,8 @@ export const post = async (path, data, options = {}) => {
    const response = await httpRequest.post(path, data, {
       headers: {
          ...defaultHeader,
-         Authorization: "Bearer " + localStorage.getItem("accessToken"),
+         Authorization:
+            "Bearer " + localStorage.getItem("accessToken") ?? ACCESS_TOKEN,
       },
       ...options,
    });
@@ -46,7 +46,8 @@ export const put = async (path, data, options = {}) => {
    const response = await httpRequest.put(path, data, {
       headers: {
          ...defaultHeader,
-         Authorization: "Bearer " + localStorage.getItem("accessToken"),
+         Authorization:
+            "Bearer " + localStorage.getItem("accessToken") ?? ACCESS_TOKEN,
       },
       ...options,
    });
@@ -58,7 +59,8 @@ export const Delete = async (path, payload, options = {}) => {
    const response = await httpRequest.delete(path, {
       headers: {
          ...defaultHeader,
-         Authorization: "Bearer " + localStorage.getItem("accessToken"),
+         Authorization:
+            "Bearer " + localStorage.getItem("accessToken") ?? ACCESS_TOKEN,
       },
       params: {
          ...payload,
