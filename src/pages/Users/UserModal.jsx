@@ -6,6 +6,7 @@ import { signUp, updateUserInfo } from "../../common/slices/userSlice";
 import { useDispatch } from "react-redux";
 import { GROUP_ID } from "../../common/utils/config";
 import { signupSchema } from "../SignUp/signupSchema";
+import { userSchema } from "./userSchema";
 
 const UserModal = ({ ...props }) => {
    const dispatch = useDispatch();
@@ -20,7 +21,7 @@ const UserModal = ({ ...props }) => {
          maLoaiNguoiDung: props.info?.maLoaiNguoiDung ?? "QuanTri",
          hoTen: props.info?.hoTen ?? "",
       },
-      validationSchema: signupSchema,
+      validationSchema: userSchema,
       onSubmit: (values) => {
          if (props?.info) {
             console.log("[update user]", values);
